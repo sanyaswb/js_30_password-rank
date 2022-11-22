@@ -1,49 +1,43 @@
 function passwordRank(password) {
-	function convertStringInChar(str) {
-		str.split('');
-		const arrChar = [];
-		const index = 0;
-		for (let i = 0; i < str.length; i++) {
-			arrChar.push(str[i].charCodeAt(index));
-		}
-		return arrChar;
-	}
-
 	let finalGrade = 0;
-	const arrPass = convertStringInChar(password);
-	let smallLetter = true;
-	let capitalLetter = true;
-	let specialSymbol = true;
+	let upperCase = true;
+	let lowerCase = true;
+	let symbols = true;
 	let number = true;
-	let amountSymbol = 0;
+	let moreSymbol = 0;
 
-	for (let i = 0; i < arrPass.length; i++) {
+	for (let i = 0; i < password.length; i++) {
+		if (password[i].charCodeAt(0) < 32 ||
+				password[i].charCodeAt(0) > 47 && password[i].charCodeAt(0) < 58 ||
+				password[i].charCodeAt(0) > 64 && password[i].charCodeAt(0) < 91 ||
+				password[i].charCodeAt(0) > 96 && password[i].charCodeAt(0) < 123 ||
+				password[i].charCodeAt(0) > 126) {
 
-		if (arrPass[i] > 96 && arrPass[i] < 123 && smallLetter || arrPass[i] > 1071 && arrPass[i] < 1112 && smallLetter || arrPass[i] === 1169 && smallLetter) {
-			finalGrade += 1;
-			smallLetter = false;
-		} else if (arrPass[i] > 64 && arrPass[i] < 91 && capitalLetter || arrPass[i] > 1027 && arrPass[i] < 1072 && capitalLetter || arrPass[i] === 1168 && capitalLetter) {
-			finalGrade += 1;
-			capitalLetter = false;
-		} else if (arrPass[i] > 31 && arrPass[i] < 48 && specialSymbol || arrPass[i] > 57 && arrPass[i] < 65 && specialSymbol || arrPass[i] > 90 && arrPass[i] < 97 && specialSymbol || arrPass[i] > 122 && arrPass[i] < 127 && specialSymbol) {
-			amountSymbol += 1;
-			if (amountSymbol === 2) {
-				specialSymbol = false;
+			if (isNaN(Number(password[i]))) {
+
+				if (password[i] === password[i].toUpperCase() && upperCase ) {
+					finalGrade++;
+					upperCase = false;
+				} else if (lowerCase) {
+					finalGrade++;
+					lowerCase = false;
+				}
+			} else if (number) {
+				finalGrade++;
+				number = false;
 			}
-		} else if (arrPass[i] > 47 && arrPass[i] < 58 && number) {
-			finalGrade += 1;
-			number = false;
+		} else if (symbols) {
+			finalGrade++;
+			moreSymbol++;
+
+			if (moreSymbol === 2) {
+				symbols = false;
+			}
 		}
 	}
 
-	if (amountSymbol === 1) {
-		finalGrade += 1;
-	} else if (amountSymbol === 2) {
-		finalGrade += 2;
-	}
-
-	if (arrPass.length >= 12) {
-		finalGrade = finalGrade * 2;
+	if (password.length >= 12) {
+		finalGrade *= 2;
 	}
 
 	if (finalGrade <= 3)  {
